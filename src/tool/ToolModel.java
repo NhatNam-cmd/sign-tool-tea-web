@@ -4,6 +4,8 @@ import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.security.KeyFactory;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
 import java.security.PrivateKey;
 import java.security.Signature;
 import java.security.spec.PKCS8EncodedKeySpec;
@@ -31,5 +33,21 @@ public class ToolModel {
         byte[] signed = sig.sign();
 
         return Base64.getEncoder().encodeToString(signed);
+    }
+
+    public KeyPair generateKeyPair() throws Exception {
+        KeyPairGenerator kpg = KeyPairGenerator.getInstance("DSA");
+        kpg.initialize(2048);
+        return kpg.generateKeyPair();
+    }
+
+    public String formatPrivateKey(KeyPair kp) {
+        String encoded = Base64.getEncoder().encodeToString(kp.getPrivate().getEncoded());
+        return "-----BEGIN PRIVATE KEY-----\n" + encoded + "\n-----END PRIVATE KEY-----";
+    }
+
+    public String formatPublicKey(KeyPair kp) {
+        String encoded = Base64.getEncoder().encodeToString(kp.getPublic().getEncoded());
+        return "-----BEGIN PUBLIC KEY-----\n" + encoded + "\n-----END PUBLIC KEY-----";
     }
 }
